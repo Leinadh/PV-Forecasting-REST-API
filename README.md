@@ -39,3 +39,21 @@ Activate enviroment
 ```shell
 conda deactivate 
 ```
+
+## Deploy server
+Activate enviroment
+```shell
+conda activate my_env
+```
+Install packages
+```shell
+pip install -r requirements.txt
+```
+Check if there is a process listening to port 8000
+```shell
+lsof -i :8000
+```
+Deploy
+```shell
+nohup uvicorn main:app --reload --host 0.0.0.0 &
+```
