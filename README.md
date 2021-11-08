@@ -47,13 +47,17 @@ conda activate my_env
 ```
 Install packages
 ```shell
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 Check if there is a process listening to port 8000
 ```shell
 lsof -i :8000
 ```
-Deploy
+Deploy to a Local Server
+```shell
+uvicorn main:app --reload
+```
+Deploy as a daemond process
 ```shell
 nohup uvicorn main:app --reload --host 0.0.0.0 &
 ```
