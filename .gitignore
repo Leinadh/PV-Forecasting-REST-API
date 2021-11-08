@@ -1,3 +1,6 @@
+# db config
+config/db.py
+
 # nohup output
 nohup.out
 
