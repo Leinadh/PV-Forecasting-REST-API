@@ -53,7 +53,11 @@ Check if there is a process listening to port 8000
 ```shell
 lsof -i :8000
 ```
-Deploy
+Deploy to a Local Server
+```shell
+uvicorn main:app --reload
+```
+Deploy as a deamond process
 ```shell
 nohup uvicorn main:app --reload --host 0.0.0.0 &
 ```
