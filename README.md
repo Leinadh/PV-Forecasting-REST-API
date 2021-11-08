@@ -57,7 +57,7 @@ Deploy to a Local Server
 ```shell
 uvicorn main:app --reload
 ```
-Deploy as a deamond process
+Deploy as a daemond process
 ```shell
 nohup uvicorn main:app --reload --host 0.0.0.0 &
 ```
