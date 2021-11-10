@@ -1,6 +1,5 @@
-from decimal import Decimal
 from sqlalchemy import Column, Table
-from sqlalchemy.sql.sqltypes import Integer, String, Decimal
+from sqlalchemy.sql.sqltypes import Integer, String, Numeric
 from config.db import meta, engine
 
 locations = Table(
@@ -12,9 +11,9 @@ locations = Table(
     Column("region", String(50)),
     Column("city", String(50)),
     Column("address", String(100)),
-    Column("latitud", Decimal(11, 6)),
-    Column("longitude", Decimal(11, 6)),
-    Column("altitud", Decimal(11, 6)),
+    Column("latitud", Numeric(11, 6)),
+    Column("longitude", Numeric(11, 6)),
+    Column("altitud", Numeric(11, 6)),
 )
 
 meta.create_all(engine)
