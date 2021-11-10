@@ -1,22 +1,100 @@
 from fastapi import FastAPI, Path
+from sqlalchemy import select
 from config.db import conn
 from models.location import locations
+from models.location_observation import location_observations
+from models.system import systems
+from models.system_observation import system_observations
+from models.ml_model import ml_models
+from models.prediction import predictions
+from models.metric import metrics
 from typing import Optional
 from pydantic import BaseModel
-
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins= ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+@app.get("/")
+def index():
+    return "Este es el servidor de PV Forecasting App. " + \
+        "Aplicación: " + "https://google.com" + \
+        " Documentación del servidor: " + ""
 
 
-@app.get("/locations")
+@app.get("/listar-ubicaciones")
+def listar_ubicaciones():
+    # stmt = select(locations, systems).join_from(locations, systems, locations.c.location_id==systems.c.location_id)
+
+    # stmt = conn.query(locations, systems)
+
+    # stmt = select(ml_models, systems).join_from(
+    #     ml_models, systems,
+    #     ml_models.c.system_id == systems.c.system_id)
+
+    # stmt2 = select(ml_models.c.model_name, locations.c.label).join_from(stmt,
+    #
+    stmt = '''
+        SELECT m.ml_model_id as id_ubicacion_modelo, CONCAT(l.label," - ",l.city,", ", l.region, " (",s.technology,")") as texto_ubicacion,
+                 m.model_name, m.description, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city 
+        FROM DBTesis.ml_models as m
+        JOIN DBTesis.systems as s
+        ON m.system_id = s.system_id
+        JOIN DBTesis.locations as l
+        ON l.location_id = s.location_id;
+    '''
+    data = conn.execute(stmt).fetchall()
+    return data
+    # return list(map(lambda x: x['label']+" - "+x['technology'], data))
+
+@app.get("/imagen-ubicacion/{id_ubicacion_modelo}")
+def get_imagen_ubicacion(id_ubicacion_modelo: int):
+    if not isinstance(id_ubicacion_modelo, int): return None
+        
+    stmt = f'SELECT m.image FROM DBTesis.ml_models as m WHERE m.ml_model_id = {id_ubicacion_modelo};'
+    print(stmt)
+    return conn.execute(stmt).fetchall()
+
+
+@ app.get("/locations")
 def get_locations():
-    return conn.execute(locations.select().fetch_all())
+    return conn.execute(locations.select()).fetchall()
 
 
+@ app.get("/systems")
+def get_systems():
+    return conn.execute(systems.select()).fetchall()
 
 
+@ app.get("/location_observations")
+def get_location_observations():
+    return conn.execute(location_observations.select()).fetchall()
 
+
+@ app.get("/system_observations")
+def get_system_observations():
+    return conn.execute(system_observations.select()).fetchall()
+
+
+@ app.get("/ml_models")
+def get_ml_models():
+    return conn.execute(ml_models.select()).fetchall()
+
+
+@ app.get("/predictions")
+def get_predictions():
+    return conn.execute(predictions.select()).fetchall()
+
+
+@ app.get("/metrics")
+def get_metrics():
+    return conn.execute(metrics.select()).fetchall()
 
 
 students = {
@@ -27,10 +105,12 @@ students = {
     }
 }
 
+
 class Student(BaseModel):
     name: str
     age: int
     year: str
+
 
 class UpdateStudent(BaseModel):
     name: Optional[str] = None
@@ -38,23 +118,18 @@ class UpdateStudent(BaseModel):
     year: Optional[str] = None
 
 
-@app.get("/")
-def index():
-    return "Este es el servidor de PV Forecasting App. " + \
-    "La app se encuentra en el siguiente enlace: " + "https://google.com" + \
-    " Para visualizar la documentación del servidor ingrese al siguiente enlace: "
-
 # @app.get("/")
 # def index():
 #     return {"name": "First Data"}
-    
 
-@app.get("/get-student/{student_id}")
+
+@ app.get("/get-student/{student_id}")
 def get_student(student_id: int = Path(None, description="The ID of the student you want to view", gt=0, lt=3)):
     return students[student_id]
 
-@app.get("/get-by-name/{student_id}")
-def get_student(*, student_id: int, name: Optional[str] = None, test : int):
+
+@ app.get("/get-by-name/{student_id}")
+def get_student(*, student_id: int, name: Optional[str] = None, test: int):
     for student_id in students:
         if students[student_id]["name"] == name:
             return students[student_id]
