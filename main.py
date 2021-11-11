@@ -42,7 +42,7 @@ def listar_ubicaciones():
     #
     stmt = '''
         SELECT m.ml_model_id as id_ubicacion_modelo, CONCAT(l.label," - ",l.city,", ", l.region, " (",s.technology,")") as texto_ubicacion,
-                 m.model_name, m.description, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city 
+                 m.model_name, m.description, m.image_path, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city 
         FROM DBTesis.ml_models as m
         JOIN DBTesis.systems as s
         ON m.system_id = s.system_id
@@ -53,13 +53,15 @@ def listar_ubicaciones():
     return data
     # return list(map(lambda x: x['label']+" - "+x['technology'], data))
 
-@app.get("/imagen-ubicacion/{id_ubicacion_modelo}")
-def get_imagen_ubicacion(id_ubicacion_modelo: int):
-    if not isinstance(id_ubicacion_modelo, int): return None
+# @app.get("/imagen-ubicacion/{id_ubicacion_modelo}")
+# def get_imagen_ubicacion(id_ubicacion_modelo: int):
+#     if not isinstance(id_ubicacion_modelo, int): return None
         
-    stmt = f'SELECT m.image FROM DBTesis.ml_models as m WHERE m.ml_model_id = {id_ubicacion_modelo};'
-    print(stmt)
-    return conn.execute(stmt).fetchall()
+#     stmt = f'SELECT m.image FROM DBTesis.ml_models as m WHERE m.ml_model_id = {id_ubicacion_modelo};'
+#     print(stmt)
+#     image =  conn.execute(stmt).fetchall()
+#     print(type(image[0][0]))
+#     return image
 
 
 @ app.get("/locations")
@@ -97,25 +99,25 @@ def get_metrics():
     return conn.execute(metrics.select()).fetchall()
 
 
-students = {
-    1: {
-        "name": "john",
-        "age": 17,
-        "year": "year 12"
-    }
-}
+# students = {
+#     1: {
+#         "name": "john",
+#         "age": 17,
+#         "year": "year 12"
+#     }
+# }
 
 
-class Student(BaseModel):
-    name: str
-    age: int
-    year: str
+# class Student(BaseModel):
+#     name: str
+#     age: int
+#     year: str
 
 
-class UpdateStudent(BaseModel):
-    name: Optional[str] = None
-    age: Optional[int] = None
-    year: Optional[str] = None
+# class UpdateStudent(BaseModel):
+#     name: Optional[str] = None
+#     age: Optional[int] = None
+#     year: Optional[str] = None
 
 
 # @app.get("/")
@@ -123,17 +125,17 @@ class UpdateStudent(BaseModel):
 #     return {"name": "First Data"}
 
 
-@ app.get("/get-student/{student_id}")
-def get_student(student_id: int = Path(None, description="The ID of the student you want to view", gt=0, lt=3)):
-    return students[student_id]
+# @ app.get("/get-student/{student_id}")
+# def get_student(student_id: int = Path(None, description="The ID of the student you want to view", gt=0, lt=3)):
+#     return students[student_id]
 
 
-@ app.get("/get-by-name/{student_id}")
-def get_student(*, student_id: int, name: Optional[str] = None, test: int):
-    for student_id in students:
-        if students[student_id]["name"] == name:
-            return students[student_id]
-    return {"Data": "Not found"}
+# @ app.get("/get-by-name/{student_id}")
+# def get_student(*, student_id: int, name: Optional[str] = None, test: int):
+#     for student_id in students:
+#         if students[student_id]["name"] == name:
+#             return students[student_id]
+#     return {"Data": "Not found"}
 
 # @app.post("/create-student/{student_id}")
 # def create_student(student_id : int, student : Student):

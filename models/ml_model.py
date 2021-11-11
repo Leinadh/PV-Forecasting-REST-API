@@ -10,6 +10,7 @@ ml_models = Table(
     Column("model_name", String(100),),
     Column("description", String(500),),
     Column("image", LargeBinary),
+    Column("image_path", String(500)),
     Column("is_trasfered", Boolean),
     Column("origin_system", Integer, ForeignKey("systems.system_id"), nullable=True),
 )
