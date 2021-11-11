@@ -11,6 +11,7 @@ from models.metric import metrics
 from typing import Optional
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import datetime
 
 app = FastAPI()
 app.add_middleware(
@@ -63,6 +64,12 @@ def listar_ubicaciones():
 #     print(type(image[0][0]))
 #     return image
 
+@app.get("/fechas-limite")
+def get_fechas_limite():
+    fecha_min = datetime.date(2020,2,24)
+    now = datetime.datetime.now()
+    fecha_max = now.date() if now.hour < 17 else now.date() + datetime.timedelta(days=1)
+    return {"min_date": fecha_min, "max_date": fecha_max}
 
 @ app.get("/locations")
 def get_locations():
