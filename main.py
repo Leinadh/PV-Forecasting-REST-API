@@ -81,7 +81,7 @@ def listar_ubicaciones():
 def get_fechas_limite():
     fecha_min = datetime.date(2020, 2, 24)
     now = datetime.datetime.now()
-    now = datetime.date(2020, 10, 20)
+    now = datetime.datetime(2020, 10, 20)
     
     fecha_max = now.date() if now.hour < 17 else now.date() + \
         datetime.timedelta(days=1)
