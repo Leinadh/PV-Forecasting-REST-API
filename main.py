@@ -16,11 +16,12 @@ import datetime
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins= ["*"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
 
 @app.get("/")
 def index():
@@ -41,9 +42,20 @@ def listar_ubicaciones():
 
     # stmt2 = select(ml_models.c.model_name, locations.c.label).join_from(stmt,
     #
+
+    # stmt = '''
+    #     SELECT m.ml_model_id as id_ubicacion_modelo, CONCAT(l.label," - ",l.city,", ", l.region, " (",s.technology,")") as texto_ubicacion,
+    #              m.model_name, m.description, m.image_path, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city
+    #     FROM DBTesis.ml_models as m
+    #     JOIN DBTesis.systems as s
+    #     ON m.system_id = s.system_id
+    #     JOIN DBTesis.locations as l
+    #     ON l.location_id = s.location_id;
+    # '''
     stmt = '''
         SELECT m.ml_model_id as id_ubicacion_modelo, CONCAT(l.label," - ",l.city,", ", l.region, " (",s.technology,")") as texto_ubicacion,
-                 m.model_name, m.description, m.image_path, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city 
+                 m.model_name, CONCAT("Este modelo fue entrenado con datos recolectado en las instalaciones de la ", l.full_name, " en ",l.city,", ", l.region, ".") as description,
+                 m.image_path, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city 
         FROM DBTesis.ml_models as m
         JOIN DBTesis.systems as s
         ON m.system_id = s.system_id
@@ -57,19 +69,35 @@ def listar_ubicaciones():
 # @app.get("/imagen-ubicacion/{id_ubicacion_modelo}")
 # def get_imagen_ubicacion(id_ubicacion_modelo: int):
 #     if not isinstance(id_ubicacion_modelo, int): return None
-        
+
 #     stmt = f'SELECT m.image FROM DBTesis.ml_models as m WHERE m.ml_model_id = {id_ubicacion_modelo};'
 #     print(stmt)
 #     image =  conn.execute(stmt).fetchall()
 #     print(type(image[0][0]))
 #     return image
 
+
 @app.get("/fechas-limite")
 def get_fechas_limite():
-    fecha_min = datetime.date(2020,2,24)
+    fecha_min = datetime.date(2020, 2, 24)
     now = datetime.datetime.now()
-    fecha_max = now.date() if now.hour < 17 else now.date() + datetime.timedelta(days=1)
+    fecha_max = now.date() if now.hour < 17 else now.date() + \
+        datetime.timedelta(days=1)
     return {"min_date": fecha_min, "max_date": fecha_max}
+
+
+@app.get("/listar-graficos-metricas")
+def listar_graficos_metricas():
+
+    stmt = '''
+        SELECT mo.ml_model_id as id_ubicacion_modelo, me.metric_id, me.metric_name,me.date, me.value, me.metric_image_path
+        FROM DBTesis.ml_models as mo
+        JOIN DBTesis.metrics as me
+        ON mo.ml_model_id = me.ml_model_id;
+    '''
+    data = conn.execute(stmt).fetchall()
+    return data
+
 
 @ app.get("/locations")
 def get_locations():
