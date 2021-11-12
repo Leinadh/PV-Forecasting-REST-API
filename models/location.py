@@ -14,6 +14,7 @@ locations = Table(
     Column("latitud", Numeric(11, 6)),
     Column("longitude", Numeric(11, 6)),
     Column("altitud", Numeric(11, 6)),
+    Column("location_image_path", String(500)),
 )
 
 meta.create_all(engine)
