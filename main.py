@@ -104,7 +104,24 @@ def listar_graficos_metricas():
         FROM DBTesis.metrics;
     '''
     data = conn.execute(stmt).fetchall()
-    return data
+    # return data
+    return  """[{
+        id_ubicacion_modelo: 4,
+        texto_ubicacion: "UNTRM - Chachapoyas, Amazonas (PERC)",
+        model_name: "1D-CNN",
+        description:
+          "Este modelo fue entrenado con datos recolectado en las instalaciones de la Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas en Chachapoyas, Amazonas.",
+        image_path: "ubicaciones/u3-s.png",
+        is_trasfered: 0,
+        origin_system: null,
+        technology: "PERC",
+        label: "UNTRM",
+        full_name:
+          "Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas",
+        region: "Amazonas",
+        city: "Chachapoyas",
+      }]
+    """
 
 
 @ app.get("/locations")
