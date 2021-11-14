@@ -10,6 +10,7 @@ metrics = Table(
     Column("metric_name", String(100)),
     Column("date", Date),
     Column("value", Numeric(10, 4)),
+    Column("previous_value", Numeric(10, 4)),
     Column("metric_image_path", String(500)),
 )
 

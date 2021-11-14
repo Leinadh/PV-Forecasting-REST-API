@@ -80,9 +80,9 @@ def listar_ubicaciones():
 
 @app.get("/fechas-limite")
 def get_fechas_limite():
-    fecha_min = datetime.date(2020, 2, 24)
+    fecha_min = datetime.date(2021, 6, 1)
     now = datetime.datetime.now() 
-    now = now - relativedelta(years=1)
+    now = now - relativedelta(months=1)
     # now = datetime.datetime(2020, 10, 20)
     
     fecha_max = now.date() if now.hour < 17 else now.date() + \
@@ -98,6 +98,10 @@ def listar_graficos_metricas():
         FROM DBTesis.ml_models as mo
         JOIN DBTesis.metrics as me
         ON mo.ml_model_id = me.ml_model_id;
+    '''
+    stmt = '''
+        SELECT ml_model_id as id_ubicacion_modelo, metric_id, metric_name,date, value,previous_value, metric_image_path
+        FROM DBTesis.metrics;
     '''
     data = conn.execute(stmt).fetchall()
     return data
