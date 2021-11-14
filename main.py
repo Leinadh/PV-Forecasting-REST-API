@@ -73,7 +73,7 @@ def listar_ubicaciones():
           "Este modelo fue entrenado con datos recolectado en las instalaciones de la Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas en Chachapoyas, Amazonas.",
         'image_path': "ubicaciones/u3-s.png",
         'is_trasfered': 0,
-        'origin_system': null,
+        'origin_system': None,
         'technology': "PERC",
         'label': "UNTRM",
         'full_name':
