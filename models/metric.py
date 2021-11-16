@@ -12,6 +12,7 @@ metrics = Table(
     Column("value", Numeric(10, 4)),
     Column("previous_value", Numeric(10, 4)),
     Column("metric_image_path", String(500)),
+    Column("metric_current_image_path", String(500))
 )
 
 meta.create_all(engine)

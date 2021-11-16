@@ -115,7 +115,7 @@ def listar_graficos_metricas():
     #     ON mo.ml_model_id = me.ml_model_id;
     # '''
     stmt = '''
-        SELECT ml_model_id as id_ubicacion_modelo, metric_id, metric_name,date, value,previous_value, metric_image_path
+        SELECT ml_model_id as id_ubicacion_modelo, metric_id, metric_name,date, value, previous_value, metric_image_path, metric_current_image_path
         FROM DBTesis.metrics;
     '''
     data = conn.execute(stmt).fetchall()
