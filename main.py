@@ -64,23 +64,23 @@ def listar_ubicaciones():
         ON l.location_id = s.location_id;
     '''
     data = conn.execute(stmt).fetchall()
-    # return data
-    return [{
-        'id_ubicacion_modelo': 4,
-        'texto_ubicacion': "UNTRM - Chachapoyas, Amazonas (PERC)",
-        'model_name': "1D-CNN",
-        'description':
-          "Este modelo fue entrenado con datos recolectado en las instalaciones de la Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas en Chachapoyas, Amazonas.",
-        'image_path': "ubicaciones/u3-s.png",
-        'is_trasfered': 0,
-        'origin_system': None,
-        'technology': "PERC",
-        'label': "UNTRM",
-        'full_name':
-          "Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas",
-        'region': "Amazonas",
-        'city': "Chachapoyas",
-      }]
+    return data
+    # return [{
+    #     'id_ubicacion_modelo': 4,
+    #     'texto_ubicacion': "UNTRM - Chachapoyas, Amazonas (PERC)",
+    #     'model_name': "1D-CNN",
+    #     'description':
+    #     "Este modelo fue entrenado con datos recolectado en las instalaciones de la Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas en Chachapoyas, Amazonas.",
+    #     'image_path': "ubicaciones/u3-s.png",
+    #     'is_trasfered': 0,
+    #     'origin_system': None,
+    #     'technology': "PERC",
+    #     'label': "UNTRM",
+    #     'full_name':
+    #     "Universidad Nacional Toribio Rodríguez de Mendoza de Amazonas",
+    #     'region': "Amazonas",
+    #     'city': "Chachapoyas",
+    # }]
     # return list(map(lambda x: x['label']+" - "+x['technology'], data))
 
 # @app.get("/imagen-ubicacion/{id_ubicacion_modelo}")
@@ -97,34 +97,29 @@ def listar_ubicaciones():
 @app.get("/fechas-limite")
 def get_fechas_limite():
     fecha_min = datetime.date(2021, 6, 1)
-    now = datetime.datetime.utcnow() - datetime.timedelta(hours=5)
-    print('Actual date:',now)
+    now = datetime.datetime.utcnow() - datetime.timedelta(hours=5)  # Current time Peru
     now = now - relativedelta(months=1)
-    print('1 month before date:',now)
     # now = datetime.datetime(2020, 10, 20)
-    
     fecha_max = now.date() if now.hour < 17 else now.date() + \
         datetime.timedelta(days=1)
-    print('Max date:',now)
     return {"min_date": fecha_min, "max_date": fecha_max}
 
 
 @app.get("/listar-graficos-metricas")
 def listar_graficos_metricas():
 
-    stmt = '''
-        SELECT mo.ml_model_id as id_ubicacion_modelo, me.metric_id, me.metric_name,me.date, me.value, me.metric_image_path
-        FROM DBTesis.ml_models as mo
-        JOIN DBTesis.metrics as me
-        ON mo.ml_model_id = me.ml_model_id;
-    '''
+    # stmt = '''
+    #     SELECT mo.ml_model_id as id_ubicacion_modelo, me.metric_id, me.metric_name,me.date, me.value, me.metric_image_path
+    #     FROM DBTesis.ml_models as mo
+    #     JOIN DBTesis.metrics as me
+    #     ON mo.ml_model_id = me.ml_model_id;
+    # '''
     stmt = '''
         SELECT ml_model_id as id_ubicacion_modelo, metric_id, metric_name,date, value,previous_value, metric_image_path
         FROM DBTesis.metrics;
     '''
     data = conn.execute(stmt).fetchall()
     return data
-    
 
 
 @ app.get("/locations")
