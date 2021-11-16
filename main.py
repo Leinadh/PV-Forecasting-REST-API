@@ -98,11 +98,14 @@ def listar_ubicaciones():
 def get_fechas_limite():
     fecha_min = datetime.date(2021, 6, 1)
     now = datetime.datetime.now() 
+    print('Actual date:',now)
     now = now - relativedelta(months=1)
+    print('1 month before date:',now)
     # now = datetime.datetime(2020, 10, 20)
     
     fecha_max = now.date() if now.hour < 17 else now.date() + \
         datetime.timedelta(days=1)
+    print('Max date:',now)
     return {"min_date": fecha_min, "max_date": fecha_max}
 
 
