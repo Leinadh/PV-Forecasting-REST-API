@@ -97,7 +97,7 @@ def listar_ubicaciones():
 @app.get("/fechas-limite")
 def get_fechas_limite():
     fecha_min = datetime.date(2021, 6, 1)
-    now = datetime.datetime.now() 
+    now = datetime.datetime.utcnow() - datetime.timedelta(hours=5)
     print('Actual date:',now)
     now = now - relativedelta(months=1)
     print('1 month before date:',now)
