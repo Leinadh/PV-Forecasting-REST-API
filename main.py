@@ -63,6 +63,16 @@ def listar_ubicaciones():
         JOIN DBTesis.locations as l
         ON l.location_id = s.location_id;
     '''
+    stmt = '''
+        SELECT m.ml_model_id as id_ubicacion_modelo, CONCAT(l.label," - ",l.city,", ", l.region) as texto_ubicacion,
+                 m.model_name, CONCAT("Este modelo fue entrenado con datos recolectado en las instalaciones de la ", l.full_name, " en ",l.city,", ", l.region, ".") as description,
+                 m.image_path, m.is_trasfered, m.origin_system, s.technology, l.label, l.full_name, l.region, l.city 
+        FROM DBTesis.ml_models as m
+        JOIN DBTesis.systems as s
+        ON m.system_id = s.system_id
+        JOIN DBTesis.locations as l
+        ON l.location_id = s.location_id;
+    '''
     data = conn.execute(stmt).fetchall()
     return data
     # return [{
