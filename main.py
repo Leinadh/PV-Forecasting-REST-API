@@ -110,7 +110,7 @@ def listar_ubicaciones():
 def get_fechas_limite():
     fecha_min = datetime.date(2021, 6, 1)
     now = datetime.datetime.utcnow() - datetime.timedelta(hours=5)  # Current time Peru
-    now = now - relativedelta(months=1)
+    now = now - relativedelta(months=2)
     # now = datetime.datetime(2020, 10, 20)
     fecha_max = now.date() if now.hour < 17 else now.date() + \
         datetime.timedelta(days=1)
